@@ -1,0 +1,61 @@
+<section>
+  
+    <div class="container">
+        <div class="row mt-4 ">
+            <a href="/admin/add-product" class="btn btn-success ml-auto " style="width: 159px;margin-left:auto">ADD PRODUCTS</a>
+
+        </div>
+    </div>
+    <table class="table mt-5" id="mytable">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Title</th>
+      <th scope="col">Category</th>
+      <th scope="col">Description</th>
+      <th>Image</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each Products}}
+    <tr>
+      <th scope="row">1</th>
+      <td>{{this.Name}}</td>
+      <td>{{this.Category}}</td>
+      <td>{{this.Description}}</td>
+      <td><img style="width: 50px;height:50px" src="/PRODUCT-IMAGES/{{this._id}}.jpg" alt=""></td>
+      <td>
+      <a href="/admin/edit-product/{{this._id}}" class="btn btn-danger">EDIT</a>
+      <a href="/admin/delete-product/{{this._id}}" class="btn  btn-primary" onclick="return confirm('Are you Sure You Want to Delete {{this.Name}}')">DELETE</a>
+      </td>
+       
+    </tr>
+    {{/each}}
+    
+  </tbody>
+</table>
+</section>
+<script>
+  $(document).ready( function () {
+    $('#mytable').DataTable({
+      dom: '<"top"f>rt<"bottom"lip><"clear">'
+    });
+} );
+</script>
+<style>
+/* Move the search bar to the right */
+.top .dataTables_filter {
+  text-align: right;
+  margin-right: 40px;
+  
+}
+
+/* Optional: tweak bottom section too */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+</style>

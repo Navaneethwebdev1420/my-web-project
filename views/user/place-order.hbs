@@ -1,0 +1,117 @@
+<form action="" id="checkOut-Form">
+  <div class="row mb-3">
+    <label for="inputDATE3" class="col-sm-2 col-form-label">DATE</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputDATE3" name="date">
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="inputADDRESS3" class="col-sm-2 col-form-label">ADDRESSS</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputEmail3" name="address">
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="inputPINCODE3" class="col-sm-2 col-form-label">PIN-CODE</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="inputPINCODE3" name="pincode">
+    </div>
+  </div>
+    
+  
+  
+  <input type="text" name="userId" id="" value="{{user._id}}" hidden>
+
+  <fieldset class="row mb-3">
+    <legend class="col-form-label col-sm-2 pt-0">Payment Method</legend>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="payment-method" value="COD" checked>
+        <label class="form-check-label">
+          COD
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="payment-method"  value="ONLINE">
+        <label class="form-check-label">
+          Online-Payment
+        </label>
+      </div>
+      
+ 
+    </div><br>
+     
+  </fieldset>
+  <H5>TOTAL AMOUNT <span style="padding-left: 78px;"> : Rs.{{Total}}</span></H5><br>
+  
+  <button type="submit" class="btn btn-primary">Check-Out</button>
+</form>
+
+<script>
+    $("#checkOut-Form").submit((e)=>{
+      e.preventDefault()
+      $.ajax({
+        url:'/place-order',
+        method:'post',
+        data:$('#checkOut-Form').serialize(),
+        success:(response)=>{
+          alert(response)
+          if(response.codSuccess){
+            location.href='/order-success'
+          }else{
+            razorPayment(response)
+          }
+
+        }
+
+      })
+    })
+    function razorPayment(order){
+      var options = {
+    "key": "rzp_test_RXahPaiiMarRHS", // Enter the Key ID generated from the Dashboard
+    "amount": order.amount, // Amount is in currency subunits.
+    "currency": "INR",
+    "name": "Navaneeth K", //your business name
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+       
+        verifypayment(response,order)
+    },
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+        "name": "Gaurav Kumar", //your customer's name
+        "email": "gaurav.kumar@example.com", 
+        "contact": "+919876543210"  //Provide the customer's phone number for better conversion rates 
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.open();
+
+  }
+  function verifypayment(payment,order){
+    $.ajax({
+      url:'/verify-payment',
+      data: JSON.stringify({ payment, order }),
+      contentType: 'application/json',
+      method:'post',
+      success:(response)=>{
+        if(response.status){
+          location.href='/order-success'
+
+        }else{
+          alert("Payment-Failed")
+        }
+      }
+    })
+  }
+  
+
+
+</script>

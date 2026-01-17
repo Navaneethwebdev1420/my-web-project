@@ -1,0 +1,48 @@
+<section>
+    <div class="container">
+        <div class="row mt-4">
+            <a href="/admin/add-product" class="btn btn-success ml-auto">ADD-PRODUCT</a>
+        </div>
+        <table class="table mt-5" id="orders-table">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th>ADDRESS</th>
+                <th>Pincode</th>
+                <th scope="col">AMOUNT</th>
+                <th scope="col">PAYMENT</th>
+                <th>Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {{#each orders}}
+            <tr>
+                <td>{{this.deliveryDetails.date}}</td>
+                <td>{{this.deliveryDetails.address}}</td>
+                <td>{{this.deliveryDetails.pincode}}</td>
+                <td>{{this.totalAmount}}</td>
+                <td>{{this.paymentMethod}}</td>
+                <td>{{this.status}}</td>
+                <td>
+                    <a href="/view-order-products/{{this._id}}" class="btn btn-primary">View Products</a>
+
+                     <form action="/admin/update-order-status/{{this._id}}" method="post" class="d-inline">
+                <select name="status" onchange="this.form.submit()" class="form-select form-select-sm d-inline w-auto">
+              <option value="Pending" {{#ifEquals this.status "Pending"}}selected{{/ifEquals}}>Pending</option>
+              <option value="Shipped" {{#ifEquals this.status "Shipped"}}selected{{/ifEquals}}>Shipped</option>
+              <option value="Delivered" {{#ifEquals this.status "Delivered"}}selected{{/ifEquals}}>Delivered</option>
+               <option value="placed" {{#ifEquals this.status "placed"}}selected{{/ifEquals}}>placed</option>
+            </select>
+          </form>
+                </td>
+                     
+            </tr>
+
+            {{/each}}
+        </tbody>
+
+
+    </table>
+    </div>
+</section>
